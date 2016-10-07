@@ -19,13 +19,25 @@
 static long baud = 9600;
 static String callsign = "KI7AFR";
 
-int num = 90;
+int num = 0;
 
 void setup() {
   //pinMode(DTR_PIN, OUTPUT);
   //digitalWrite(DTR_PIN, LOW);
   Serial.begin(baud);
-  Serial1.begin(baud);
+  Serial.println("Starting");
+  Serial2.begin(baud);
+  while (!Serial2)
+    {
+        Serial.println("AAAH");
+    }
+  Serial2.println('H');
+  while (Serial2.available())
+  {
+    Serial.println("available");
+    char c = (char)Serial2.read();
+    Serial.write(c);
+  }
   setCallSign(callsign);
   delay(100);
 }
@@ -41,18 +53,20 @@ void loop() {
             str += c;
             c = (char) Serial.read();
         }
-        Serial1.print(str);
+        Serial2.print(str);
         //digitalWrite(DTR_PIN, HIGH);
         delay(100);
     }
-    Serial.println(num);
-    sendMessage(String(num));
+    //Serial.println(num);
+    //sendMessage(String(num));
     delay(2000);
-    num++;
+    //num++;
     //displaySettings();
     //digitalWrite(DTR_PIN, LOW);
-    while (Serial1.available()) {
-        char c = (char)Serial1.read();
+    while (Serial2.available()) {
+            Serial.println("available");
+
+        char c = (char)Serial2.read();
         Serial.write(c);
     }
 }
@@ -63,8 +77,8 @@ void setCallSign(String call)
     str += SET_CALLSIGN;
     str += call;
 
-    Serial1.print(str);
-    //Serial1.print(str);
+    Serial2.print(str);
+    //Serial2.print(str);
 
     //digitalWrite(DTR_PIN, HIGH);
 }
@@ -74,8 +88,8 @@ void displaySettings()
    String str = "";
    str += SHOW_CONFIG;
    
-   Serial1.print(str); 
-   //Serial1.print(str);
+   Serial2.print(str); 
+   //Serial2.print(str);
    //digitalWrite(DTR_PIN, HIGH);
 
 }
@@ -87,9 +101,9 @@ void sendMessage(String message)
     //str += SEND_APRS_MSG;
     str += message;
 
-    Serial1.print(str);
+    Serial2.print(str);
     //delay(50);
-    //Serial1.print(str);
+    //Serial2.print(str);
 }
 
 void setLatitude(String latitude)
@@ -98,8 +112,8 @@ void setLatitude(String latitude)
     str += SET_LATITUDE;
     str += latitude;
 
-    Serial1.print(str);
-    //Serial1.print(str);
+    Serial2.print(str);
+    //Serial2.print(str);
 }
 
 void setLongitude(String longitude)
@@ -108,6 +122,6 @@ void setLongitude(String longitude)
     str += SET_LONGITUDE;
     str += longitude;
 
-    Serial1.print(str);
-    //Serial1.print(str);
+    Serial2.print(str);
+    //Serial2.print(str);
 }
